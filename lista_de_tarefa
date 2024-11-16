@@ -1,0 +1,64 @@
+#integração de python com mysql
+
+import mysql.connector
+
+banco=mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='albuquerqu',
+    database='meubanco'
+)
+
+cursor=banco.cursor()
+
+#criar
+def criar_tarefa():
+    titulo=str(input('Titulo:'))
+    descricao=str(input('Descrição:'))
+    comando=f'INSERT INTO lista_tarefa (titulo,descricao) VALUES ("{titulo}","{descricao}")'
+    cursor.execute(comando)
+    banco.commit()
+
+def atualizar_tarefa():
+    print('1-Atualizar Titulo\n2-Atualizar descrição')
+    atualizar=int(input('O que deseja atualizar:'))
+
+    if atualizar == 1:
+        idtarefa=int(input('Id da tarefa:'))
+        titulo_atual=str(input("Titulo:"))
+        comando=f'UPDATE lista_tarefa Set titulo = ("{titulo_atual}") WHERE (id_tarefa)=({idtarefa})'
+        cursor.execute(comando)
+        banco.commit()
+    if atualizar == 2:
+        idtarefa=int(input('Id da tarefa:'))
+        descricao_atual=str(input('Descrição:'))
+        comando=f'UPDATE lista_tarefa Set descricao = ("{descricao_atual}") WHERE (id_tarefa)=("{idtarefa}")'
+        cursor.execute(comando)
+        banco.commit()
+def consultar_tarefa():
+    comando=f'SELECT * FROM lista_tarefa'
+    cursor.execute(comando)
+    for x in cursor.fetchall():
+        print(x)
+def deletar():
+    idtarefa=str(input('Tarefa para deletar:'))
+    comando=f'DELETE FROM lista_tarefa WHERE id_tarefa = ({idtarefa})'
+    cursor.execute(comando)
+    banco.commit()
+
+while True:
+    print('0-Sair\n1-Criar Tarefa\n2-Atualizar Tarefa\n3-Ver Tarefa\n4-Deletar Tarefa')
+    escolha=int(input('Digite uma opção:'))
+    if escolha == 1:
+        criar_tarefa()
+    if escolha == 2:
+        atualizar_tarefa()
+    if escolha == 3:
+        consultar_tarefa()
+    if escolha == 4:
+        deletar()
+    if escolha == 0:
+        break
+
+cursor.close()
+banco.close()
